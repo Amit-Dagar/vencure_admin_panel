@@ -65,6 +65,7 @@ export default class Agreements extends PureComponent {
       });
   };
 
+
   updateAgreementStatus = () => {
     const params = {};
     this.setState({
@@ -220,6 +221,11 @@ export default class Agreements extends PureComponent {
                           <li>
                             <a href="#" onClick={() => this.filter("")}>
                               <span>Filter By All</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" onClick={() => this.filter('expiring_soon')}>
+                              <span>Filter By Expiring in 15 Days</span>
                             </a>
                           </li>
                           <li>
