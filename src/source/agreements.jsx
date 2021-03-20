@@ -94,6 +94,40 @@ export default class Agreements extends PureComponent {
       });
   };
 
+  setCounterAgreement = (event) => {
+    event.preventDefault();
+    this.setState({
+      loader: <Spinner />,
+    });
+    const params = {
+      price: event.target.price.value,
+      description: event.target.description.value,
+    };
+
+    Axios.post(
+      server + "/api/agreement/set_agreement_counter/" + this.state.agreementId,
+      params,
+      config
+    )
+      .then((rsp) => {
+        this.setState({
+          loader: "",
+          statusMessage: (
+            <Alert className="success" message={rsp.data.detail} />
+          ),
+        });
+        this.readAgreements(this.state.curr_url);
+      })
+      .catch((err) => {
+        this.setState({
+          loader: "",
+          statusMessage: (
+            <Alert className="danger" message={err.response.data.detail} />
+          ),
+        });
+      });
+  };
+
   render() {
     const { agreements, next, prev, loader, statusMessage } = this.state;
 
@@ -281,6 +315,7 @@ export default class Agreements extends PureComponent {
                                   this.setState({
                                     agreementId: data.id,
                                     AgreementStatus: 2,
+                                    statusMessage: "",
                                   })
                                 }
                                 data-toggle="modal"
@@ -296,6 +331,7 @@ export default class Agreements extends PureComponent {
                                   this.setState({
                                     agreementId: data.id,
                                     AgreementStatus: 4,
+                                    statusMessage: "",
                                   })
                                 }
                                 data-toggle="modal"
@@ -311,6 +347,7 @@ export default class Agreements extends PureComponent {
                                   this.setState({
                                     agreementId: data.id,
                                     AgreementStatus: 3,
+                                    statusMessage: "",
                                   })
                                 }
                                 data-toggle="modal"
@@ -352,6 +389,8 @@ export default class Agreements extends PureComponent {
             </li>
           </ul>
         </nav>
+
+        {/* UpdateStatusModal */}
         <Modal
           id="updateStatusModal"
           title={
@@ -380,6 +419,43 @@ export default class Agreements extends PureComponent {
                   data-dismiss="modal"
                 >
                   Continue {loader}
+                </button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+
+        {/* Counter Modal */}
+        <Modal id="counterModal" title="Counter Agreeement">
+          <div className="modal-body">
+            <form onSubmit={this.setCounterAgreement}>
+              {statusMessage}
+              <div className="form-group">
+                <label htmlFor="price" className="mb-1">
+                  Expected Price
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="price"
+                  required
+                />
+              </div>
+              <div className="form-group mt-3">
+                <label htmlFor="price" className="mb-1">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  cols="30"
+                  rows="5"
+                  className="form-control"
+                  required
+                ></textarea>
+              </div>
+              <div className="form-group float-right">
+                <button className="btn btn-primary">
+                  Update Agreement {loader}
                 </button>
               </div>
             </form>
