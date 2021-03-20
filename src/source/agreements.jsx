@@ -14,6 +14,11 @@ export default class Agreements extends PureComponent {
     curr_url: "/api/agreement/read",
     loader: "",
     message: "",
+
+    // change status
+    agreementId: "",
+    statusMessage: "",
+    AgreementStatus: 1,
   };
 
   componentDidMount = () => {
@@ -56,8 +61,41 @@ export default class Agreements extends PureComponent {
       });
   };
 
+  updateAgreementStatus = () => {
+    const params = {};
+    this.setState({
+      loader: <Spinner />,
+    });
+
+    const type =
+      this.state.AgreementStatus == 2 ? "accept" : "reject_agreeement";
+
+    Axios.post(
+      server + "/api/agreement/" + type + "/" + this.state.agreementId,
+      params,
+      config
+    )
+      .then((rsp) => {
+        this.setState({
+          loader: "",
+          statusMessage: (
+            <Alert className="success" message={rsp.data.detail} />
+          ),
+        });
+        this.readAgreements(this.state.curr_url);
+      })
+      .catch((err) => {
+        this.setState({
+          loader: "",
+          statusMessage: (
+            <Alert className="danger" message={err.response.data.detail} />
+          ),
+        });
+      });
+  };
+
   render() {
-    const { agreements, next, prev, loader, message } = this.state;
+    const { agreements, next, prev, loader, statusMessage } = this.state;
 
     return (
       <div className="nk-content-body">
@@ -237,17 +275,47 @@ export default class Agreements extends PureComponent {
                         <div className="dropdown-menu dropdown-menu-right">
                           <ul className="link-list-opt no-bdr">
                             <li>
-                              <a href="#">
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  this.setState({
+                                    agreementId: data.id,
+                                    AgreementStatus: 2,
+                                  })
+                                }
+                                data-toggle="modal"
+                                data-target="#updateStatusModal"
+                              >
                                 <span>Accept Agreement</span>
                               </a>
                             </li>
                             <li>
-                              <a href="#">
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  this.setState({
+                                    agreementId: data.id,
+                                    AgreementStatus: 4,
+                                  })
+                                }
+                                data-toggle="modal"
+                                data-target="#updateStatusModal"
+                              >
                                 <span>Reject Agreement</span>
                               </a>
                             </li>
                             <li>
-                              <a href="#">
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  this.setState({
+                                    agreementId: data.id,
+                                    AgreementStatus: 3,
+                                  })
+                                }
+                                data-toggle="modal"
+                                data-target="#counterModal"
+                              >
                                 <span>Counter Agreement</span>
                               </a>
                             </li>
@@ -284,6 +352,39 @@ export default class Agreements extends PureComponent {
             </li>
           </ul>
         </nav>
+        <Modal
+          id="updateStatusModal"
+          title={
+            this.state.AgreementStatus === 2
+              ? "Accept Agreement"
+              : "Reject Agreement"
+          }
+        >
+          <div className="modal-body">
+            <form onSubmit={this.updateAgreementStatus} className="text-center">
+              {statusMessage}
+              <h5>
+                Are you sure you want to{" "}
+                {this.state.AgreementStatus === 2
+                  ? "Accept Agreement"
+                  : "Reject Agreement"}
+                ?
+              </h5>
+              <div className="form-group mt-4">
+                <button className="btn btn-dark mr-2" data-dismiss="modal">
+                  Go back
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={this.updateAgreementStatus}
+                  data-dismiss="modal"
+                >
+                  Continue {loader}
+                </button>
+              </div>
+            </form>
+          </div>
+        </Modal>
       </div>
     );
   }
