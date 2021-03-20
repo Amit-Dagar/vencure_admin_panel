@@ -15,6 +15,9 @@ export default class Vendors extends PureComponent {
     loader: "",
     message: "",
 
+    // create  user
+    createMessage: "",
+
     // update User
     UserId: "",
     UserStatus: true,
@@ -137,12 +140,48 @@ export default class Vendors extends PureComponent {
       });
   };
 
+  createVendor = (event) => {
+    event.preventDefault();
+    this.setState({
+      loader: <Spinner />,
+    });
+
+    const params = {
+      name: event.target.name.value,
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+
+    Axios.post(server + "/api/vendor/createVendor", params, config)
+      .then((rsp) => {
+        this.setState({
+          loader: "",
+          createMessage: (
+            <Alert className="success" message={rsp.data.detail} />
+          ),
+        });
+        this.readVendors(this.state.curr_url);
+      })
+      .catch((err) => {
+        this.setState({
+          loader: "",
+          createMessage: (
+            <Alert
+              className="danger"
+              message={String(err.response.data.detail)}
+            />
+          ),
+        });
+      });
+  };
+
   render() {
     const {
       vendors,
       next,
       prev,
       loader,
+      createMessage,
       updateMessage,
       statusMessage,
       passwordType,
@@ -158,7 +197,7 @@ export default class Vendors extends PureComponent {
             <div className="nk-block-head-content">
               <div className="toggle-wrap nk-block-tools-toggle">
                 <div className="row">
-                  <div className="col-md-12">
+                  <div className="col-md-8">
                     <div className="form-row justify-content-end">
                       <div className="col-8">
                         <input
@@ -180,6 +219,15 @@ export default class Vendors extends PureComponent {
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div className="col-md-4">
+                    <button
+                      className="btn btn-primary d-inline"
+                      data-toggle="modal"
+                      data-target="#newVendor"
+                    >
+                      <span className="pt-0">New Vendor</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -341,6 +389,55 @@ export default class Vendors extends PureComponent {
             </li>
           </ul>
         </nav>
+
+        <Modal id="newVendor" title="Add New Vendor">
+          <div className="modal-body">
+            <form onSubmit={this.createVendor}>
+              {createMessage}
+              <div className="form-group">
+                <label htmlFor="name" className="mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group mt-3">
+                <label htmlFor="name" className="mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group mt-3">
+                <label htmlFor="name" className="mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group mt-3 float-right">
+                <button type="submit" className="btn btn-primary">
+                  Add Vendor {loader}
+                </button>
+              </div>
+            </form>
+          </div>
+        </Modal>
 
         <Modal id="updateModal" title="Reset Password">
           <div className="modal-body">
