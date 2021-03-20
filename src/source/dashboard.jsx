@@ -18,6 +18,7 @@ export default class Dashboard extends PureComponent {
     vendors: 0,
     loader: "",
     isLoaded: false,
+    Agreements: [],
   };
 
   componentDidMount = async () => {
@@ -39,6 +40,17 @@ export default class Dashboard extends PureComponent {
           isLoaded: true,
         });
       });
+    await Axios.get(server + "/api/agreement/read", config)
+      .then((rsp) => {
+        this.setState({
+          Agreements: rsp.data.results,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          loader: null,
+        });
+      });
   };
 
   render() {
@@ -52,6 +64,7 @@ export default class Dashboard extends PureComponent {
       expiring_agreements,
       counter_agreements,
       agreements,
+      Agreements,
       vendors,
     } = this.state;
     return (
@@ -65,82 +78,140 @@ export default class Dashboard extends PureComponent {
           </div>
         </div>
         <div className="nk-block">
-          <div className="row">
-            {/* Products */}
-            <div className="col-md-4 my-3">
-              <div className="nk-download">
-                <div className="data">
-                  <div className="thumb">
-                    <img src="./images/icons/product-pp.svg" alt="" />
-                  </div>
-                  <div className="info">
-                    <h6 className="title">
-                      <span className="name">Products</span>
-                    </h6>
-                    <div className="meta">
-                      <span className="version">
-                        <span className="text-soft">Live: </span>{" "}
-                        <span>{isLoaded ? live_products : loader}</span>
-                      </span>
-                      <span className="release">
-                        <span className="text-soft">Total: </span>{" "}
-                        <span>{isLoaded ? products : loader}</span>
-                      </span>
+          <div className="row g-gs">
+            <div className="col-lg-8">
+              {/* Products */}
+              <div className="row">
+                <div className="col-md-6 my-3">
+                  <div className="nk-download">
+                    <div className="data">
+                      <div className="thumb">
+                        <img src="./images/icons/product-pp.svg" alt="" />
+                      </div>
+                      <div className="info">
+                        <h6 className="title">
+                          <span className="name">Products</span>
+                        </h6>
+                        <div className="meta">
+                          <span className="version">
+                            <span className="text-soft">Total Products: </span>{" "}
+                            <span>{isLoaded ? products : loader}</span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* Agreements */}
-            <div className="col-md-4 my-3">
-              <div className="nk-download">
-                <div className="data">
-                  <div className="thumb">
-                    <img src="/images/icons/file-type-doc.svg" alt="" />
+                {/* Agreements */}
+                <div className="col-md-6 my-3">
+                  <div className="nk-download">
+                    <div className="data">
+                      <div className="thumb">
+                        <img src="/images/icons/profile.svg" alt="" />
+                      </div>
+                      <div className="info">
+                        <h6 className="title">
+                          <span className="name">Vendors</span>
+                        </h6>
+                        <div className="meta">
+                          <span className="version">
+                            <span className="text-soft">Total Vendors: </span>{" "}
+                            <span>{isLoaded ? vendors : loader}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="info">
-                    <h6 className="title">
-                      <span className="name">Agreements</span>
-                    </h6>
-                    <div className="meta">
-                      <span className="version">
-                        <span className="text-soft">Running: </span>{" "}
-                        <span>{isLoaded ? running_agreements : loader}</span>
-                      </span>
-                      <span className="version">
-                        <span className="text-soft">Counter: </span>{" "}
-                        <span>{isLoaded ? counter_agreements : loader}</span>
-                      </span>
-                      <span className="version">
-                        <span className="text-soft">Expiring Soon: </span>{" "}
-                        <span>{isLoaded ? expiring_agreements : loader}</span>
-                      </span>
-                      <span className="release">
-                        <span className="text-soft">Total: </span>{" "}
-                        <span>{isLoaded ? agreements : loader}</span>
-                      </span>
+                </div>
+                <div className="col-lg-12 my-3">
+                  <div className="card h-100">
+                    <div className="card-inner">
+                      <div className="card-title-group mb-2">
+                        <div className="card-title">
+                          <h6 className="title">Agreements Statistics</h6>
+                        </div>
+                      </div>
+                      <ul className="nk-store-statistics">
+                        <li className="item">
+                          <div className="primary">
+                            <div className="title">Running Agreements</div>
+                            <span>
+                              {isLoaded ? running_agreements : loader}
+                            </span>
+                          </div>
+                          <em className="icon bg-primary-dim ni ni-file-text"></em>
+                        </li>
+                        <li className="item">
+                          <div className="primary">
+                            <div className="title">Counter Agreements</div>
+                            <span>
+                              {isLoaded ? counter_agreements : loader}
+                            </span>
+                          </div>
+                          <em className="icon bg-primary-dim ni ni-file-text"></em>
+                        </li>
+                        <li className="item">
+                          <div className="primary">
+                            <div className="title">Expiring Soon</div>
+                            <span>
+                              {isLoaded ? expiring_agreements : loader}
+                            </span>
+                          </div>
+                          <em className="icon bg-primary-dim ni ni-file-text"></em>
+                        </li>
+                        <li className="item">
+                          <div className="primary">
+                            <div className="title">Total Agreements</div>
+                            <span>{isLoaded ? agreements : loader}</span>
+                          </div>
+                          <em className="icon bg-primary-dim ni ni-file-text"></em>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* Vendors */}
-            <div className="col-md-4 my-3">
-              <div className="nk-download">
-                <div className="data">
-                  <div className="thumb">
-                    <img src="./images/icons/profile.svg" alt="" />
-                  </div>
-                  <div className="info">
-                    <h6 className="title">
-                      <span className="name">Vendors</span>
-                    </h6>
-                    <div className="meta">
-                      <span className="release">
-                        <span className="text-soft">Total: </span>{" "}
-                        <span>{isLoaded ? vendors : loader}</span>
-                      </span>
+            <div className="col-lg-4 my-3">
+              <div className="card h-100">
+                <div className="card-inner">
+                  <div className="card-title-group mb-2">
+                    <div className="card-title">
+                      <h6 className="title">Recent Agreements</h6>
                     </div>
+                  </div>
+                  <div className="nk-tb-list is-separate mb-3 mt-4">
+                    <div className="nk-tb-item">
+                      <div className="nk-tb-col shadow-sm">
+                        <b className="sub-text">Product Name</b>
+                      </div>
+                      <div className="nk-tb-col shadow-sm">
+                        <b className="sub-text">Vendor Name</b>
+                      </div>
+                      <div className="nk-tb-col shadow-sm">
+                        <b className="sub-text">Price</b>
+                      </div>
+                    </div>
+                    {Agreements.map((data, idx) =>
+                      idx < 5 ? (
+                        <div className="nk-tb-item" key={idx}>
+                          <div className="nk-tb-col shadow-sm">
+                            <span className="sub-text">
+                              {data.product_name}
+                            </span>
+                          </div>
+                          <div className="nk-tb-col shadow-sm">
+                            <span className="sub-text">{data.vendor_name}</span>
+                          </div>
+                          <div className="nk-tb-col shadow-sm">
+                            <span className="sub-text">₹ {data.price}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    )}
                   </div>
                 </div>
               </div>
