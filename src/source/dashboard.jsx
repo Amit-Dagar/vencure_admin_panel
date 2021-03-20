@@ -33,7 +33,7 @@ export default class Dashboard extends PureComponent {
           products: rsp.data.payload.products,
           running_agreements: rsp.data.payload.running_agreements,
           expiring_agreements: rsp.data.payload.expiring_agreements,
-          counter_agreements: rsp.data.payload.live_products,
+          counter_agreements: rsp.data.payload.counter_agreements,
           agreements: rsp.data.payload.agreements,
           vendors: rsp.data.payload.vendors,
           isLoaded: true,

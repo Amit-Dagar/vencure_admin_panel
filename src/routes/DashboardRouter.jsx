@@ -6,6 +6,7 @@ import Dashboard from "../source/dashboard";
 import Products from "../source/products";
 import Agreements from "../source/agreements";
 import Vendors from "../source/vendors";
+import Settings from "../source/settings";
 
 export default function DashboardRouter() {
   document.body.classList.add("npc-default");
@@ -21,6 +22,7 @@ export default function DashboardRouter() {
               <div className="container-fluid">
                 <div className="nk-content-inner">
                   <Switch>
+                    <Route path="/settings" component={Settings} />
                     <Route path="/vendors" component={Vendors} />
                     <Route path="/agreements" component={Agreements} />
                     <Route path="/products" component={Products} />

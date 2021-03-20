@@ -24,7 +24,7 @@ export default class Sidebar extends PureComponent {
         data-content="sidebarMenu"
       >
         <div className="nk-sidebar-element nk-sidebar-head">
-          <div className="nk-sidebar-brand">
+          <div className="nk-sidebar-brand mt-3">
             <a href="#" className="logo-link nk-sidebar-logo">
               <img
                 className="logo-light logo-img"

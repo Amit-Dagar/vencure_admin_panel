@@ -26,7 +26,11 @@ export default class Agreements extends PureComponent {
   };
 
   search = () => {
-    this.readAgreements(this.state.url, this.state.search);
+    this.readAgreements("/api/agreement/read", this.state.search);
+  };
+
+  filter = (id) => {
+    this.readAgreements("/api/agreement/read" + "?filter=" + id);
   };
 
   readAgreements = (url, search = null) => {
@@ -68,7 +72,7 @@ export default class Agreements extends PureComponent {
     });
 
     const type =
-      this.state.AgreementStatus == 2 ? "accept" : "reject_agreeement";
+      this.state.AgreementStatus === 2 ? "accept" : "reject_agreeement";
 
     Axios.post(
       server + "/api/agreement/" + type + "/" + this.state.agreementId,
@@ -211,16 +215,35 @@ export default class Agreements extends PureComponent {
                       >
                         <em className="icon ni ni-more-h"></em>
                       </a>
-                      {/* <div className="dropdown-menu dropdown-menu-right">
-                      <ul className="link-list-opt no-bdr">
-                        <li>
-                          <a href="#">
-                            <em className="icon ni ni-mail"></em>
-                            <span>Send Email to All</span>
-                          </a>
-                        </li>
-                      </ul>
-                    </div> */}
+                      <div className="dropdown-menu dropdown-menu-right">
+                        <ul className="link-list-opt no-bdr">
+                          <li>
+                            <a href="#" onClick={() => this.filter("")}>
+                              <span>Filter By All</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" onClick={() => this.filter(2)}>
+                              <span>Filter By Running</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" onClick={() => this.filter(1)}>
+                              <span>Filter By Waiting</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" onClick={() => this.filter(3)}>
+                              <span>Filter By Counter</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" onClick={() => this.filter(4)}>
+                              <span>Filter By Ended</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </li>
                 </ul>
@@ -410,7 +433,7 @@ export default class Agreements extends PureComponent {
                 ?
               </h5>
               <div className="form-group mt-4">
-                <button className="btn btn-dark mr-2" data-dismiss="modal">
+                <button className="btn btn-primary mr-2" data-dismiss="modal">
                   Go back
                 </button>
                 <button

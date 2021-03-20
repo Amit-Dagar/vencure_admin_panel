@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { Link } from "react-router-dom";
 
 export default class Topbar extends PureComponent {
   logout = () => {
@@ -22,15 +23,15 @@ export default class Topbar extends PureComponent {
               </a>
             </div>
             <div className="nk-header-brand d-xl-none">
-              <a href="html/index.html" className="logo-link">
+              <a href="#" className="logo-link">
                 <img
                   className="logo-light logo-img"
-                  src="/images/logo-dark.png"
+                  src="/images/logo.svg"
                   alt="logo"
                 />
                 <img
                   className="logo-dark logo-img"
-                  src="/images/logo-dark.png"
+                  src="/images/logo.svg"
                   alt="logo-dark"
                 />
               </a>
@@ -58,10 +59,10 @@ export default class Topbar extends PureComponent {
                     <div className="dropdown-inner">
                       <ul className="link-list">
                         <li>
-                          <a href="html/user-profile-setting.html">
+                          <Link to="/settings">
                             <em className="icon ni ni-setting-alt"></em>
                             <span>Account Setting</span>
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </div>
